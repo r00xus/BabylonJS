@@ -49,6 +49,10 @@
             BABYLON.Vector3.Zero());
 
         camera.panningSensibility = 50;
+        camera.panningInertia = 0;
+        camera.inertia = 0;
+        camera.angularSensibility = 1;
+        camera.wheelPrecision = 1;
 
         camera.attachControl(canvas, true);
 
@@ -91,9 +95,9 @@
 
                 label.linkWithMesh(newCar);
 
-                //label.linkOffsetY = -100;
+                label.linkOffsetY = -100;
 
-                label.text = "Вагон";
+                label.text = "Carriage";
 
 
 

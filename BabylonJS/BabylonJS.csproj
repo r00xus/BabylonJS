@@ -132,6 +132,7 @@
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\babylon.js" />
     <Content Include="Content\cars.json" />
+    <Content Include="Content\car_no_texture.glb" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Web.config" />
