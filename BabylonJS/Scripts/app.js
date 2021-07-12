@@ -3,6 +3,7 @@
     var scene;
     var engine;
     var cars;
+    var advancedTexture;
 
     function _init() {
 
@@ -42,8 +43,8 @@
         scene.clearColor = BABYLON.Color3.White();
 
         var camera = new BABYLON.ArcRotateCamera("Camera",
-            BABYLON.Tools.ToRadians(0),
-            BABYLON.Tools.ToRadians(0),
+            BABYLON.Tools.ToRadians(-45),
+            BABYLON.Tools.ToRadians(45),
             100,
             BABYLON.Vector3.Zero());
 
@@ -54,11 +55,13 @@
         var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 100, 0), scene);
 
         light.intensity = 1;
+        
+        advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
         BABYLON.SceneLoader.ImportMesh(
             '',
             '/Content/',
-            'car.glb',
+            'car_no_texture.glb',
             scene,
             function (newMeshes) {
 
@@ -80,7 +83,19 @@
                 var newCar = _car.clone('car' + wayIndex + carIndex);
 
                 newCar.position.x = wayIndex * 10;
-                newCar.position.z = carIndex * 6;
+                newCar.position.z = carIndex * 6;               
+
+                var label = new BABYLON.GUI.TextBlock();
+
+                advancedTexture.addControl(label);
+
+                label.linkWithMesh(newCar);
+
+                //label.linkOffsetY = -100;
+
+                label.text = "Вагон";
+
+
 
             });
 
