@@ -43,7 +43,7 @@
         scene.clearColor = BABYLON.Color3.White();
 
         var camera = new BABYLON.ArcRotateCamera("Camera",
-            BABYLON.Tools.ToRadians(-45),
+            BABYLON.Tools.ToRadians(0),
             BABYLON.Tools.ToRadians(45),
             100,
             BABYLON.Vector3.Zero());
@@ -54,18 +54,21 @@
         camera.angularSensibility = 1;
         camera.wheelPrecision = 1;
 
-        camera.attachControl(canvas, true);
+        camera.lowerRadiusLimit = 50;
+        camera.upperRadiusLimit = 200;        
+
+        camera.attachControl(canvas, true, true, 0);
 
         var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 100, 0), scene);
 
         light.intensity = 1;
-        
+
         advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
         BABYLON.SceneLoader.ImportMesh(
             '',
             '/Content/',
-            'car_no_texture.glb',
+            'car.glb',
             scene,
             function (newMeshes) {
 
@@ -87,25 +90,62 @@
                 var newCar = _car.clone('car' + wayIndex + carIndex);
 
                 newCar.position.x = wayIndex * 10;
-                newCar.position.z = carIndex * 6;               
+                newCar.position.z = carIndex * 6;
 
-                var label = new BABYLON.GUI.TextBlock();
+                _drawCarNum(newCar);
 
-                advancedTexture.addControl(label);
+                //var label = new BABYLON.GUI.TextBlock();
 
-                label.linkWithMesh(newCar);
+                //advancedTexture.addControl(label);
 
-                label.linkOffsetY = -100;
+                //label.linkWithMesh(newCar);
 
-                label.text = "Carriage";
+                //label.linkOffsetY = -100;
 
-
+                //label.text = "Carriage";
 
             });
 
         });
 
         scene.removeMesh(_car);
+    }
+
+    function _drawCarNum(car) {
+
+        //var outputplane = BABYLON.Mesh.CreatePlane(
+        //    "outputplane", { height: 1, width: 1, sideOrientation: BABYLON.Mesh.DOUBLESIDE });
+
+        var panel = BABYLON.MeshBuilder.CreatePlane("plane", { width: 2, height: 1 });
+
+        panel.billboardMode = BABYLON.AbstractMesh.BILLBOARDMODE_ALL;
+
+        panel.material = new BABYLON.StandardMaterial("outputplane", scene);
+
+        panel.position.x = car.position.x;
+        panel.position.z = car.position.z;
+        panel.position.y = 3;
+
+        var dynTexture = new BABYLON.DynamicTexture("dynamic texture", { width: 512, height: 256 }, scene, true);
+
+        panel.material.diffuseTexture = dynTexture;
+
+        //panel.material.diffuseTexture.hasAlpha = true;
+
+        panel.useAlphaFromDiffuseTexture = true;
+
+        var ctx = dynTexture.getContext();
+
+        ctx.font = "100px Arial";
+
+        var text = "№ 34534";
+
+        ctx.fillStyle = 'white';
+
+        ctx.fillText(text, (512 - ctx.measureText(text).width) / 2, 50);
+
+        dynTexture.update();
+
     }
 
     return {
