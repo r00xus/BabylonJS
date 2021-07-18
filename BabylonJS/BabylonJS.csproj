@@ -500,9 +500,7 @@
     <Content Include="Content\Assets\track.glb" />
     <Content Include="Content\schema2.json" />
     <None Include="Content\Assets\car.babylon" />
-    <Content Include="Content\Assets\car.babylon.manifest" />
     <Content Include="Content\Assets\track.babylon" />
-    <Content Include="Content\Assets\track.babylon.manifest" />
     <Content Include="Content\Assets\tank.babylon" />
     <None Include="Scripts\Lib\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\dummy.js" />

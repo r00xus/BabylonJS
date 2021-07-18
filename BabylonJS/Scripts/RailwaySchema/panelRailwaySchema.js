@@ -115,11 +115,11 @@
 
                 for (var i = -20; i < 20; i++) {
 
-                    var track = this._assets.track.clone("track" + i);
+                    //var track = this._assets.track.clone("track" + i);
 
-                    track.position = new BABYLON.Vector3(-10 * j, 0, i * 6);
+                    //track.position = new BABYLON.Vector3(-10 * j, 0, i * 6);
 
-                    track.isVisible = true;
+                    //track.isVisible = true;
 
                     var car;
 
@@ -129,10 +129,6 @@
                     else {
                         car = this._assets.tank.clone("car(" + j + "," + i + ")");
                     }
-
-
-
-                    //var car = BABYLON.MeshBuilder.CreateBox("box" + i, { size: 1 }, that._scene);
 
                     car.position = new BABYLON.Vector3(-10 * j, 0.6, i * 6);
 
