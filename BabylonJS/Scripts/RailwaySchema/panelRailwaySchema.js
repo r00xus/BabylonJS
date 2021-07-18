@@ -68,6 +68,13 @@
 
             light.intensity = 1.5;
 
+            var options = new BABYLON.SceneOptimizerOptions();
+            options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1));
+            
+            var optimizer = new BABYLON.SceneOptimizer(scene, options);
+
+            optimizer.start();
+
             return scene;
         },
 
