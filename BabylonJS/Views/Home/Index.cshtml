@@ -1,47 +1,17 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-<canvas id="canvas"></canvas>
+
+
+@Html.Partial("~/Views/RailwaySchema/_panelRailwaySchema.cshtml")
 
 <script type="text/javascript">
 
     $(document).ready(function () {
 
-        App.init();
+        $('body').panelRailwaySchema();
+
     })
 
-    //window.addEventListener('DOMContentLoaded', function () {
-
-    //    var canvas = document.getElementById('canvas');
-
-    //    var engine = new BABYLON.Engine(canvas, true);
-
-    //    var createScene = function () {
-
-    //        var scene = new BABYLON.Scene(engine);            
-
-    //        var camera = new BABYLON.ArcRotateCamera("Camera",
-    //            BABYLON.Tools.ToRadians(-45),
-    //            BABYLON.Tools.ToRadians(45),
-    //            100,
-    //            BABYLON.Vector3.Zero());
-
-    //        camera.attachControl(canvas, true);
-
-    //        var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 100, 0), scene);
-
-    //        light.intensity = 1;
-
-    //        BABYLON.SceneLoader.ImportMesh('', '/Content/', 'car.glb', scene);
-
-    //        return scene;
-    //    }        
-
-    //    var scene = createScene();
-
-    //    engine.runRenderLoop(function () {
-    //        scene.render();
-    //    });
-    //});
 
 </script>
