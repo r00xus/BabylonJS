@@ -68,12 +68,13 @@
 
             light.intensity = 1.5;
 
-            var options = new BABYLON.SceneOptimizerOptions();
-            options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1));
-            
-            var optimizer = new BABYLON.SceneOptimizer(scene, options);
+            //var options = new BABYLON.SceneOptimizerOptions();
 
-            optimizer.start();
+            //options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1));
+            
+            //var optimizer = new BABYLON.SceneOptimizer(scene, options);
+
+            //optimizer.start();
 
             return scene;
         },
@@ -118,23 +119,23 @@
 
             var that = this;
 
-            for (var j = 0; j < 10; j++) {
+            for (var j = 0; j < 20; j++) {
 
                 for (var i = -20; i < 20; i++) {
 
-                    //var track = this._assets.track.clone("track" + i);
+                    var track = this._assets.track.createInstance("track" + i);
 
-                    //track.position = new BABYLON.Vector3(-10 * j, 0, i * 6);
+                    track.position = new BABYLON.Vector3(-10 * j, 0, i * 6);
 
-                    //track.isVisible = true;
+                    track.isVisible = true;
 
                     var car;
 
                     if (i % 2 == 0) {
-                        car = this._assets.car.clone("car(" + j + "," + i + ")");
+                        car = this._assets.car.createInstance("car(" + j + "," + i + ")");
                     }
                     else {
-                        car = this._assets.tank.clone("car(" + j + "," + i + ")");
+                        car = this._assets.tank.createInstance("car(" + j + "," + i + ")");
                     }
 
                     car.position = new BABYLON.Vector3(-10 * j, 0.6, i * 6);
