@@ -17,6 +17,8 @@
             this._loadAssets();
 
             this._createToolbar();
+
+            this._createPropertWindow();
         },
 
         _createToolbar: function () {
@@ -27,7 +29,7 @@
 
             that._btnRefresh.linkbutton({
                 onClick: function () {
-                    that._draw();
+                    that._loadSchema();
                 }
             });
         },
@@ -68,13 +70,7 @@
 
             light.intensity = 1.5;
 
-            //var options = new BABYLON.SceneOptimizerOptions();
-
-            //options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1));
-            
-            //var optimizer = new BABYLON.SceneOptimizer(scene, options);
-
-            //optimizer.start();
+            this._schema = new BABYLON.AssetContainer(scene);
 
             return scene;
         },
@@ -92,6 +88,7 @@
             that._addAssetToLoad(assetsManager, 'tank');
 
             assetsManager.onFinish = function () {
+                that._loadSchema();
             };
 
             assetsManager.load();
@@ -115,48 +112,141 @@
             }
         },
 
-        _draw: function () {
+        _draw: function (schema) {
 
             var that = this;
 
-            for (var j = 0; j < 20; j++) {
+            that._schema.dispose();
 
-                for (var i = -20; i < 20; i++) {
+            $.each(schema.tracks, function (i, track) {
 
-                    var track = this._assets.track.createInstance("track" + i);
+                $.each(track.cars, function (j, car) {
 
-                    track.position = new BABYLON.Vector3(-10 * j, 0, i * 6);
+                    // Путь
 
-                    track.isVisible = true;
+                    for (var t = 0; t < track.maxCount; t++) {
 
-                    var car;
+                        var trackModel = that._assets.track.createInstance("track" + t);
 
-                    if (i % 2 == 0) {
-                        car = this._assets.car.createInstance("car(" + j + "," + i + ")");
+                        trackModel.position = new BABYLON.Vector3(10 * i, 0, t * 6);
+
+                        trackModel.isVisible = true;
+
+                        trackModel.metadata = {
+                            num: track.num
+                        };
+
+                        that._schema.meshes.push(trackModel);
                     }
-                    else {
-                        car = this._assets.tank.createInstance("car(" + j + "," + i + ")");
+
+                    // Вагон
+
+                    car.track = { num: track.num };
+
+                    var carModel;
+
+                    var name = "track" + i + 'car' + j;
+
+                    if (car.type == 'tank') {
+                        carModel = that._assets.tank.createInstance(name);
+                    }
+                    else if (car.type == 'gondola') {
+                        carModel = that._assets.car.createInstance(name);
                     }
 
-                    car.position = new BABYLON.Vector3(-10 * j, 0.6, i * 6);
+                    carModel.metadata = car;
 
-                    car.isPickable = true;
+                    carModel.position = new BABYLON.Vector3(10 * i, 0.6, j * 6);
 
-                    car.isVisible = true;
+                    carModel.isPickable = true;
 
-                    car.actionManager = new BABYLON.ActionManager(that._scene);
+                    carModel.isVisible = true;
 
-                    car.actionManager.registerAction(
+                    carModel.actionManager = new BABYLON.ActionManager(that._scene);
+
+                    carModel.actionManager.registerAction(
                         new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
-                            function (bjsevt) {
-                                alert('clicked');
+                            function (evt) {
+
+                                that._loadCarPropdery(evt.source.metadata);
 
                             }
                         )
                     );
 
-                }
-            }
+                    carModel.actionManager.registerAction(new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPointerOutTrigger, carModel, "scaling", new BABYLON.Vector3(1, 1, 1), 150));
+                    carModel.actionManager.registerAction(new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPointerOverTrigger, carModel, "scaling", new BABYLON.Vector3(1.1, 1.1, 1.1), 150));
+
+
+
+                    that._schema.meshes.push(carModel);
+                });
+            });
+        },
+
+        _loadCarPropdery: function (car) {
+
+            var that = this;
+
+            var data = [];
+
+            data.push({ name: '№ вагона', value: car.num });
+            data.push({ name: 'Грузоподъемность', value: car.capacity });
+
+            if (car.type == 'tank')
+                data.push({ name: 'Тип', value: 'Цистерна' })
+            else if (car.type == 'gondola')
+                data.push({ name: 'Тип', value: 'Полувагон' })
+
+            data.push({ name: 'Расположение', value: 'Путь № ' + car.track.num });
+
+            that._grid.propertygrid('loadData', data);
+        },
+
+        _loadSchema: function () {
+
+            var that = this;
+
+            $.ajax({
+                url: '/Home/GetSchema/',
+            }).done(function (schema) {
+
+                that._draw(schema);
+
+            });
+        },
+
+        _createPropertWindow: function () {
+
+            var that = this;
+
+            var window = $('<div></div>');
+
+            window.appendTo($('body'));
+
+            that._grid = $('<table></table>');
+
+            that._grid.appendTo(window);
+
+            that._grid.propertygrid({
+                fit: true,
+                border: false,
+                scrollbarSize: 0,
+                striped: true,
+                emptyMsg: 'Выберите вагон'
+            });
+
+            window.window({
+                title: 'Свойства вагона',
+                width: 300,
+                height: 400,
+                collapsible: false,
+                minimizable: false,
+                maximizable: false,
+                left: 10,
+                top: 50
+            });
+
         }
 
     });

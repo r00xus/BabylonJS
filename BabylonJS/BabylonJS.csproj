@@ -124,10 +124,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\SchemaModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Assets\back.png" />
+    <Content Include="Content\Assets\track.png" />
     <Content Include="Content\EasyUI\themes\black\accordion.css" />
     <Content Include="Content\EasyUI\themes\black\calendar.css" />
     <Content Include="Content\EasyUI\themes\black\combo.css" />
@@ -494,10 +496,8 @@
     <Content Include="Content\EasyUI\themes\mobile.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\app.js" />
     <Content Include="Content\schema1.json" />
     <Content Include="Content\EasyUI\themes\material\images\Thumbs.db" />
-    <Content Include="Content\Assets\track.glb" />
     <Content Include="Content\schema2.json" />
     <None Include="Content\Assets\car.babylon" />
     <Content Include="Content\Assets\track.babylon" />
@@ -621,7 +621,6 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Assets\car.glb" />
     <None Include="packages.config" />
     <Content Include="Scripts\Lib\jquery-1.10.2.min.map" />
   </ItemGroup>
