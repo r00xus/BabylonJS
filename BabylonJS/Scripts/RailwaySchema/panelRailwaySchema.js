@@ -6,19 +6,25 @@
 
             var that = this;
 
+            that._schema = { tracks: [] };
+
             that._engine = that._createEngine();
 
             that._scene = that._createScene(that._engine);
+
+            that._advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
             that._scene.getEngine().runRenderLoop(function () {
                 that._scene.render();
             });
 
-            this._loadAssets();
+            that._schemaContainer = new BABYLON.AssetContainer(that._scene);
 
-            this._createToolbar();
+            that._loadAssets();
 
-            this._createPropertWindow();
+            that._createToolbar();
+
+            that._createPropertWindow();
         },
 
         _createToolbar: function () {
@@ -45,6 +51,8 @@
 
         _createScene: function (engine) {
 
+            var that = this;
+
             var scene = new BABYLON.Scene(engine);
 
             scene.clearColor = BABYLON.Color3.White();
@@ -60,6 +68,7 @@
             camera.inertia = 0;
             camera.angularSensibility = 1;
             camera.wheelPrecision = 1;
+            camera.panningAxis = new BABYLON.Vector3(1, 0, 1);
 
             camera.lowerRadiusLimit = 30;
             camera.upperRadiusLimit = 200;
@@ -70,12 +79,33 @@
 
             light.intensity = 1.5;
 
-            this._schema = new BABYLON.AssetContainer(scene);
+            var radius = camera.radius;
+
+            //scene.onBeforeRenderObservable.add(() => {
+
+            //    if (radius == camera.radius) return;
+
+            //    that._schema.tracks.forEach(function (track) {
+
+            //        track.cars.forEach(function (car) {
+
+            //            var distance = BABYLON.Vector3.Distance(camera.position, car.model.position);
+
+            //            car.label.linkOffsetY = -150 / distance * 20;
+
+            //            car.label.fontSize = 50 / distance * 25;
+
+            //        });
+            //    });
+
+            //    radius = camera.radius;
+
+            //});
 
             return scene;
         },
 
-        _loadAssets: function (scene) {
+        _loadAssets: function () {
 
             var that = this;
 
@@ -86,6 +116,7 @@
             that._addAssetToLoad(assetsManager, 'car');
             that._addAssetToLoad(assetsManager, 'track');
             that._addAssetToLoad(assetsManager, 'tank');
+            that._addAssetToLoad(assetsManager, 'hopper');
 
             assetsManager.onFinish = function () {
                 that._loadSchema();
@@ -112,59 +143,55 @@
             }
         },
 
-        _draw: function (schema) {
+        _draw: function () {
 
             var that = this;
 
-            that._schema.dispose();
+            $.each(that._schema.tracks, function (i, track) {
 
-            $.each(schema.tracks, function (i, track) {
+                // Путь
+                for (var j = 0; j < track.maxCount; j++) {
+
+                    var model = that._assets.track.createInstance("track" + j);
+
+                    model.position = new BABYLON.Vector3(15 * i, 0, j * 6);
+
+                    model.isVisible = true;
+
+                    that._schemaContainer.meshes.push(model);
+                }
 
                 $.each(track.cars, function (j, car) {
 
-                    // Путь
-
-                    for (var t = 0; t < track.maxCount; t++) {
-
-                        var trackModel = that._assets.track.createInstance("track" + t);
-
-                        trackModel.position = new BABYLON.Vector3(10 * i, 0, t * 6);
-
-                        trackModel.isVisible = true;
-
-                        trackModel.metadata = {
-                            num: track.num
-                        };
-
-                        that._schema.meshes.push(trackModel);
-                    }
-
                     // Вагон
 
-                    car.track = { num: track.num };
+                    car.track = track;
 
-                    var carModel;
+                    car.model = null;
 
                     var name = "track" + i + 'car' + j;
 
                     if (car.type == 'tank') {
-                        carModel = that._assets.tank.createInstance(name);
+                        car.model = that._assets.tank.createInstance(name);
                     }
                     else if (car.type == 'gondola') {
-                        carModel = that._assets.car.createInstance(name);
+                        car.model = that._assets.car.createInstance(name);
+                    }
+                    else if (car.type == 'hopper') {
+                        car.model = that._assets.hopper.createInstance(name);
                     }
 
-                    carModel.metadata = car;
+                    car.model.metadata = car;
 
-                    carModel.position = new BABYLON.Vector3(10 * i, 0.6, j * 6);
+                    car.model.position = new BABYLON.Vector3(15 * i, 0.3, j * 6);
 
-                    carModel.isPickable = true;
+                    car.model.isPickable = true;
 
-                    carModel.isVisible = true;
+                    car.model.isVisible = true;
 
-                    carModel.actionManager = new BABYLON.ActionManager(that._scene);
+                    car.model.actionManager = new BABYLON.ActionManager(that._scene);
 
-                    carModel.actionManager.registerAction(
+                    car.model.actionManager.registerAction(
                         new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
                             function (evt) {
 
@@ -174,12 +201,52 @@
                         )
                     );
 
-                    carModel.actionManager.registerAction(new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPointerOutTrigger, carModel, "scaling", new BABYLON.Vector3(1, 1, 1), 150));
-                    carModel.actionManager.registerAction(new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPointerOverTrigger, carModel, "scaling", new BABYLON.Vector3(1.1, 1.1, 1.1), 150));
+                    car.model.actionManager.registerAction(
+                        new BABYLON.InterpolateValueAction(
+                            BABYLON.ActionManager.OnPointerOutTrigger, car.model, "scaling", new BABYLON.Vector3(1, 1, 1), 150));
+
+                    car.model.actionManager.registerAction(
+                        new BABYLON.InterpolateValueAction(
+                            BABYLON.ActionManager.OnPointerOverTrigger, car.model, "scaling", new BABYLON.Vector3(1.1, 1.1, 1.1), 150));
+
+                    that._schemaContainer.meshes.push(car.model);
+
+                    // Label
+
+                    car.label = BABYLON.MeshBuilder.CreatePlane("plane", { width: 2, height: 1 });
+
+                    car.label.billboardMode = BABYLON.AbstractMesh.BILLBOARDMODE_ALL;
+
+                    car.label.material = new BABYLON.StandardMaterial("outputplane");
+
+                    var outputplaneTexture = new BABYLON.DynamicTexture("dynamic texture", { width: 512, height: 256 });
+
+                    outputplaneTexture.drawText(car.num, null, 140, "140px arial", "white", "#000000");
+
+                    car.label.material.diffuseTexture = outputplaneTexture;
+
+                    car.label.position.x = car.model.position.x;
+                    car.label.position.y = 3.5;
+                    car.label.position.z = car.model.position.z;
 
 
 
-                    that._schema.meshes.push(carModel);
+                });
+            });
+        },
+
+        _clear: function () {
+
+            var that = this;
+
+            that._schemaContainer.dispose();
+
+            that._schema.tracks.forEach(function (track) {
+
+                track.cars.forEach(function (car) {
+
+                    car.label.dispose();
+
                 });
             });
         },
@@ -197,6 +264,8 @@
                 data.push({ name: 'Тип', value: 'Цистерна' })
             else if (car.type == 'gondola')
                 data.push({ name: 'Тип', value: 'Полувагон' })
+            else if (car.type == 'hopper')
+                data.push({ name: 'Тип', value: 'Хоппер-вагон' })
 
             data.push({ name: 'Расположение', value: 'Путь № ' + car.track.num });
 
@@ -211,7 +280,11 @@
                 url: '/Home/GetSchema/',
             }).done(function (schema) {
 
-                that._draw(schema);
+                that._clear();
+
+                that._schema = schema;
+
+                that._draw();
 
             });
         },

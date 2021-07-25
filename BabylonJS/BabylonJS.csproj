@@ -496,12 +496,11 @@
     <Content Include="Content\EasyUI\themes\mobile.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\schema1.json" />
     <Content Include="Content\EasyUI\themes\material\images\Thumbs.db" />
-    <Content Include="Content\schema2.json" />
     <None Include="Content\Assets\car.babylon" />
     <Content Include="Content\Assets\track.babylon" />
     <Content Include="Content\Assets\tank.babylon" />
+    <Content Include="Content\Assets\hopper.babylon" />
     <None Include="Scripts\Lib\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\dummy.js" />
     <Content Include="Scripts\Lib\EasyUI\easyloader.js" />

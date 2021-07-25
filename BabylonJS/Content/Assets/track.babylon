@@ -3,9 +3,9 @@
 "materials":[{"name":"Material","id":"Material","customType":"BABYLON.PBRMaterial","emissive":[0,0,0],"reflectivity":[0.5,0.5,0.5],"roughness":0.4,"alpha":1,"transparencyMode":0,"alphaCutOff":0.4,"metallic":0, 
 "albedoTexture":{"name":"track.png","level":1,"hasAlpha":true,"coordinatesMode":0,"uOffset":0,"vOffset":0,"uScale":1,"vScale":1,"uAng":0,"vAng":0,"wAng":0,"wrapU":1,"wrapV":1,"coordinatesIndex":0},"useAlphaFromAlbedoTexture":true}],
 "meshes":[{"name":"Plane","id":"Plane","materialId":"Material","billboardMode":0,"position":[0,0,0],"rotation":[0,0,0],"scaling":[1,1,2.9688],"isVisible":true,"isEnabled":true,"pickable":false
-,"positions":[1,0,-1,-1,0,1,-1,0,-1,1,0,1]
+,"positions":[1.4957,0,-1,-1.5069,0,1,-1.5069,0,-1,1.4957,0,1]
 ,"normals":[0,1,0,0,1,0,0,1,0,0,1,0]
-,"uvs":[3.971,0.995,-0.019,0.005,3.936,-0.004,0.017,1.004]
+,"uvs":[0.003,-0.02,1.002,1.003,0.003,1.003,1.002,-0.02]
 ,"indices":[0,1,2,0,3,1]
 ,"subMeshes":[{"materialIndex":0,"verticesStart":0,"verticesCount":4,"indexStart":0,"indexCount":6}]
 ,"instances":[]}

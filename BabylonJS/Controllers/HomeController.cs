@@ -18,7 +18,7 @@ namespace BabylonJS.Controllers
         {
             var result = new SchemaModel();
 
-            var types = new string[] { "gondola", "tank" };
+            var types = new string[] { "gondola", "tank", "hopper" };
 
             var trackCount = _random.Next(5, 12);
 
@@ -30,7 +30,7 @@ namespace BabylonJS.Controllers
 
                 track.maxCount = _random.Next(5, 50);
 
-                var carCount = _random.Next(1, track.maxCount);
+                var carCount = _random.Next(5, track.maxCount);
 
                 for (var j = 1; j <= carCount; j++)
                 {
