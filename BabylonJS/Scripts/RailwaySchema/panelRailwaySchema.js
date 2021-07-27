@@ -63,7 +63,7 @@
                 100,
                 BABYLON.Vector3.Zero());
 
-            camera.panningSensibility = 50;
+            camera.panningSensibility = 30;
             camera.panningInertia = 0;
             camera.inertia = 0;
             camera.angularSensibility = 1;
@@ -78,29 +78,6 @@
             var light = new BABYLON.HemisphericLight("sun", new BABYLON.Vector3(0, 100, 0), scene);
 
             light.intensity = 1.5;
-
-            var radius = camera.radius;
-
-            //scene.onBeforeRenderObservable.add(() => {
-
-            //    if (radius == camera.radius) return;
-
-            //    that._schema.tracks.forEach(function (track) {
-
-            //        track.cars.forEach(function (car) {
-
-            //            var distance = BABYLON.Vector3.Distance(camera.position, car.model.position);
-
-            //            car.label.linkOffsetY = -150 / distance * 20;
-
-            //            car.label.fontSize = 50 / distance * 25;
-
-            //        });
-            //    });
-
-            //    radius = camera.radius;
-
-            //});
 
             return scene;
         },
