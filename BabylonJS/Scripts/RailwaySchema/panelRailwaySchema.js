@@ -72,6 +72,7 @@
 
             camera.lowerRadiusLimit = 30;
             camera.upperRadiusLimit = 200;
+            camera.upperBetaLimit  = BABYLON.Tools.ToRadians(85);
 
             camera.attachControl(canvas, true, true, 0);
 
@@ -195,12 +196,22 @@
                     car.label.billboardMode = BABYLON.AbstractMesh.BILLBOARDMODE_ALL;
 
                     car.label.material = new BABYLON.StandardMaterial("outputplane");
+                    car.label.material.specularColor = new BABYLON.Color3(0, 0, 0);
 
                     var outputplaneTexture = new BABYLON.DynamicTexture("dynamic texture", { width: 512, height: 256 });
 
+                    car.label.material.diffuseTexture = outputplaneTexture;
+
                     outputplaneTexture.drawText(car.num, null, 140, "140px arial", "white", "#000000");
 
-                    car.label.material.diffuseTexture = outputplaneTexture;
+                    var ctx = outputplaneTexture.getContext();
+
+                    ctx.fillStyle = 'blue';
+
+                    ctx.fillRect(0, 180, 512, 256);
+
+                    outputplaneTexture.update();
+
 
                     car.label.position.x = car.model.position.x;
                     car.label.position.y = 3.5;

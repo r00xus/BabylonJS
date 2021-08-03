@@ -28,9 +28,9 @@ namespace BabylonJS.Controllers
 
                 track.num = i.ToString();
 
-                track.maxCount = _random.Next(5, 50);
+                track.maxCount = _random.Next(10, 50);
 
-                var carCount = _random.Next(5, track.maxCount);
+                var carCount = _random.Next(10, track.maxCount);
 
                 for (var j = 1; j <= carCount; j++)
                 {
